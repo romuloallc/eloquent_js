@@ -1,7 +1,3 @@
-# eloquent_js
-
-
-
 # JavaScript Studies
 
 My notes and studies about the chapters of the book Eloquent JavaScript, 3rd edition.
