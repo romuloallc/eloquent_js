@@ -117,6 +117,8 @@ addEntry(["weekend", "cycling", "break", "peanuts",
 /* Computing correlation */
 console.log("_____Computing correlation_____\n")
 
+require('./04_data/code/journal.js') // Data to use
+
 function phi(table) {
     return (table[3] * table[0] - table[2] * table[1]) /
         Math.sqrt((table[2] + table[3]) * 
@@ -126,3 +128,178 @@ function phi(table) {
 }
 
 console.log(phi([76, 9, 4, 1]));
+
+function tableFor(event, journal) {
+    let table = [0, 0, 0, 0];
+    for (let i = 0; i < journal.length; i++) {
+        let entry = journal[i], index = 0;
+        if (entry.events.includes(event)) index += 1;
+        if (entry.squirrel) index += 2;
+        table[index] += 1;
+    }
+    return table;
+}
+
+console.log(tableFor("peanuts", JOURNAL));
+
+/* Array Loops */
+console.log("_____Array Loops_____\n")
+
+/* 
+To run each element of the array the loop is used:
+
+for (let i = 0; i < JOURNAL.length; i++) {
+    let entry = JOURNAL[i];
+    //Do something with entry
+}
+
+But there is a simpler way to write this:
+
+for (let entry of JOURNAL) {
+    console.log(`${entry.events.length} events`)
+}
+*/
+
+/* The Final Analysis */
+console.log("_____The Final Analysis_____\n")
+
+function journalEvents(journal) {
+    let events = [];
+    for (let entry of journal) {
+        for (let event of entry.events) {
+            if (!events.includes(event)) {
+                events.push(event);
+            }
+        }
+    }
+    return events;
+}
+
+console.log(journalEvents(JOURNAL));
+console.log(journalEvents(JOURNAL).length);
+
+for (let event of journalEvents(JOURNAL)) {
+    console.log(event + ":", phi(tableFor(event,JOURNAL)));
+}
+
+console.log("_____________________");
+
+for (let event of journalEvents(JOURNAL)) {
+    let correlation = phi(tableFor(event, JOURNAL));
+    if (correlation > 0.1 || correlation < -0.1) {
+        console.log(event + ":", correlation);
+    }
+}
+
+console.log("_____________________");
+
+for (let entry of JOURNAL) {
+    if (entry.events.includes("peanuts") && !entry.events.includes("brushed teeth")) {
+        entry.events.push("peanut teeth");
+    }
+}
+
+console.log(phi(tableFor("peanut teeth", JOURNAL)));
+
+/* Further Arrayology */
+console.log("_____Further Arrayology_____\n")
+
+let todoList = [];
+function remember(task) {
+    todoList.push(task);
+}
+
+function getTask() {
+    return todoList.shift(); // removing things at the start of an array
+}
+
+function rememberUrgently(task) {
+    todoList.unshift(task); // adding things at the start of an array
+}
+
+console.log([1, 2, 3, 2, 1].indexOf(2)); // search from the start
+console.log([1, 2, 3, 2, 1].lastIndexOf(2)); // search from the end
+
+console.log([5, 6, 7, 8, 9].slice(2, 4));
+console.log([5, 6, 7, 8, 9].slice(2));
+
+function remove(array, index) {
+    return array.slice(0, index).concat(array.slice(index + 1));
+}
+console.log(remove(["a", "b", "c", "d", "e"], 2));
+
+/* Strings and Their Properties */
+console.log("_____Strings and Their Properties_____\n")
+
+let kim = "Kim";
+kim.age = 88;
+console.log(kim.age);
+
+console.log("coconuts".slice(4, 7));
+console.log("coconuts".indexOf("u"));
+console.log("one two three".indexOf("ee"));
+console.log("    okay \n ".trim()); //removes whitespace from the start and end of a string
+console.log(String(98).padStart(7, "0"));
+
+let sentence = "Secretarybirds specialize in stomping";
+let words = sentence.split(" ");
+console.log(words);
+
+console.log(words.join("_"));
+
+console.log("La".repeat(3));
+
+/* Rest Parameters */
+console.log("_____Rest Parameters_____\n")
+
+function max(...numbers) {
+    let result = -Infinity;
+    for (let number of numbers) {
+        if (number > result) result = number;
+    }
+    return result;
+}
+
+console.log(max(4, 1, 9, -2));
+
+let numbers = [5, 1, 7];
+console.log(max(9, ...numbers, 2));
+console.log(max( ...numbers));
+
+let wordsNew = ["never", "fully"];
+console.log(["will", ...wordsNew, "understand"]);
+
+/* The Math Object */
+console.log("_____The Math Object_____\n")
+
+function randomPointOnCircle(radius) {
+    let angle = Math.random() * 2 * Math.PI;
+    return {x: radius * Math.cos(angle), y: radius * Math.sin(angle)};
+}
+
+console.log(randomPointOnCircle(2));
+console.log(Math.floor(Math.random() * 10)); 
+/*
+Math.floor - rounds down
+Math.ceil - rounds up
+Math.round - to the nearest whole number
+Math.abs - takes absolute value of a number
+*/
+
+/* Destructuring */
+console.log("_____Destructuring_____\n")
+
+function newPhi([n00, n01, n10, n11]) {
+    return (n11 * n00 - n10 * n01) / Math.sqrt((n10 + n11) * (n00 + n01) * (n01 + n11) * (n00 + n10));
+}
+
+let {name} = {name: "Faraji", age: 23};
+console.log(name);
+
+/* JSON */
+console.log("_____JSON_____\n")
+
+let stringJson = JSON.stringify({squirrel: false, events: ["weekend", "pizza"]});
+
+console.log(stringJson);
+console.log(JSON.parse(stringJson).events);
